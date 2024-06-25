@@ -4,7 +4,7 @@ import { runCommand } from "../services/command.mjs";
  * @typedef {import('../classes/settings.mjs').ProjectSettings} ProjectSettings
  */
 
-const testFolder = "server-mehmetuysal-dev-listener-test/";
+const testFolder = "";
 
 /**
  * @param {ProjectSettings} settings
