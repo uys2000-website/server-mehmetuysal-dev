@@ -1,0 +1,21 @@
+import { setULogger } from "u-logger";
+import "./services/firebase.mjs";
+import "./services/command.mjs";
+import { info, warn, error } from "./services/logger.mjs";
+import {
+  settingsListener,
+  settingsLoader,
+  settingsController,
+  projectListener,
+} from "./functions/core.mjs";
+
+console.clear();
+setULogger(true, false, info, warn, error);
+
+(async function () {
+  const settings = await settingsLoader();
+  settingsController(settings, true);
+
+  settingsListener();
+  projectListener();
+})();
