@@ -10,6 +10,7 @@ import {
 } from "./functions/core.mjs";
 
 console.clear();
+globalThis.reboot = true;
 setULogger(true, false, info, warn, error);
 
 (async function () {
