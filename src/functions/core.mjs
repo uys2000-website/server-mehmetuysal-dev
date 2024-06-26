@@ -7,12 +7,14 @@ import {
 } from "../services/firebase.mjs";
 import { Settings } from "../classes/settings.mjs";
 
-import { PROJECTSETTINGS, SETTINGS } from "../keys/constants.mjs";
-import { updateProject } from "./updater.mjs";
+import { PROJECTSETTINGS, SCRIPTS, SETTINGS } from "../keys/constants.mjs";
+import { scriptRunner } from "./script.mjs";
+import { projectRunner } from "./project.mjs";
 import { error } from "../services/logger.mjs";
 import { runCommand } from "../services/command.mjs";
 
 /**
+ * @typedef {import('../classes/settings.mjs').Settings} Settings
  * @typedef {import('../classes/settings.mjs').ProjectSettings} ProjectSettings
  */
 
@@ -64,10 +66,21 @@ export const projectListener = function () {
     snapshots.docs.forEach(async (snapshot) => {
       if (!snapshot.exists) await errorThrower("Project Not Exists");
       const data = snapshot.data();
-      if (data.outdated) {
-        updateProject(data);
-        updateDoc(PROJECTSETTINGS, snapshot.id, { outdated: false });
-      }
+      if (data.outdated) projectRunner(snapshot.id, data);
+      else if (data.pending) scriptRunner(snapshot.id, data);
+    });
+  });
+};
+
+/**
+ *
+ */
+export const scriptListener = function () {
+  return colListener(SCRIPTS, (snapshots) => {
+    snapshots.docs.forEach(async (snapshot) => {
+      if (!snapshot.exists) await errorThrower("Script Not Exists");
+      const data = snapshot.data();
+      if (data.pending) scriptRunner(snapshot.id, data);
     });
   });
 };

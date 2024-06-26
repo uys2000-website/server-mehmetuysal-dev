@@ -7,6 +7,7 @@ import {
   settingsLoader,
   settingsController,
   projectListener,
+  scriptListener,
 } from "./functions/core.mjs";
 
 console.clear();
@@ -19,4 +20,5 @@ setULogger(true, false, info, warn, error);
 
   settingsListener();
   projectListener();
+  scriptListener();
 })();

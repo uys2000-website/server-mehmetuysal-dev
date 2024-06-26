@@ -1,5 +1,6 @@
+import { PROJECTSETTINGS } from "../keys/constants.mjs";
 import { runCommand } from "../services/command.mjs";
-
+import { updateDoc } from "../services/firebase.mjs";
 /**
  * @typedef {import('../classes/settings.mjs').ProjectSettings} ProjectSettings
  */
@@ -7,12 +8,14 @@ import { runCommand } from "../services/command.mjs";
 const testFolder = "";
 
 /**
+ * @param {string} id
  * @param {ProjectSettings} settings
  */
-export const updateProject = async function (settings) {
-  await removeOldProject.pLogger(settings.folder);
-  await cloneProject.pLogger(settings.folder, settings.repo);
+export const projectRunner = async function (id, settings) {
+  await cleanProject.pLogger(settings.folder);
+  await updateProject.pLogger(settings.folder, settings.repo);
   await runProject.pLogger(settings.folder, settings.command);
+  await updateProjectStatus.pLogger(id);
 };
 
 /**
@@ -20,7 +23,7 @@ export const updateProject = async function (settings) {
  * @param {string} test
  * @returns
  */
-export const removeOldProject = function (folder, test = testFolder) {
+export const cleanProject = function (folder, test = testFolder) {
   return runCommand(`rm -r --force ../${test}${folder}`);
 };
 
@@ -30,7 +33,7 @@ export const removeOldProject = function (folder, test = testFolder) {
  * @param {string} test
  * @returns
  */
-export const cloneProject = function (folder, repo, test = testFolder) {
+export const updateProject = function (folder, repo, test = testFolder) {
   return runCommand(`git clone ${repo} ../${test}${folder}`);
 };
 
@@ -42,4 +45,12 @@ export const cloneProject = function (folder, repo, test = testFolder) {
  */
 export const runProject = function (folder, command, test = testFolder) {
   return runCommand(`cd ../${test}${folder} && ${command} &`);
+};
+
+/**
+ * @param {string} id
+ * @returns
+ */
+export const updateProjectStatus = function (id) {
+  return updateDoc(PROJECTSETTINGS, id, { outdated: false });
 };
