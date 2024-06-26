@@ -11,8 +11,8 @@ import { updateDoc } from "../services/firebase.mjs";
  * @param {Script} script
  */
 export const scriptRunner = async function (id, script) {
-  await runScript.pLogger(script.name, script.script);
   await updateScriptStatus.pLogger(id);
+  await runScript.pLogger(script.name, script.script);
 };
 
 /**

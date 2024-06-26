@@ -12,10 +12,10 @@ const testFolder = "";
  * @param {ProjectSettings} settings
  */
 export const projectRunner = async function (id, settings) {
+  await updateProjectStatus.pLogger(id);
   await cleanProject.pLogger(settings.folder);
   await updateProject.pLogger(settings.folder, settings.repo);
   await runProject.pLogger(settings.folder, settings.command);
-  await updateProjectStatus.pLogger(id);
 };
 
 /**
