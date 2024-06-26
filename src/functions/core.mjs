@@ -2,12 +2,18 @@ import {
   colListener,
   docListener,
   getDoc,
+  getDocs,
   setDoc,
   updateDoc,
 } from "../services/firebase.mjs";
 import { Settings } from "../classes/settings.mjs";
 
-import { PROJECTSETTINGS, SCRIPTS, SETTINGS } from "../keys/constants.mjs";
+import {
+  PROJECTSETTINGS,
+  SCRIPTS,
+  SETTINGS,
+  STARTUP,
+} from "../keys/constants.mjs";
 import { scriptRunner } from "./script.mjs";
 import { projectRunner } from "./project.mjs";
 import { error } from "../services/logger.mjs";
@@ -61,13 +67,26 @@ export const settingsListener = function () {
 /**
  *
  */
+export const startupLoader = function () {
+  return getDocs(STARTUP).then(async (snapshots) => {
+    for (let i = 0; i < snapshots.docs.length; i++) {
+      const snapshot = snapshots.docs[i];
+      if (!snapshot.exists) await errorThrower("Project Not Exists");
+      const data = snapshot.data();
+      await scriptRunner(snapshot.id, data, false);
+    }
+  });
+};
+
+/**
+ *
+ */
 export const projectListener = function () {
   return colListener(PROJECTSETTINGS, (snapshots) => {
     snapshots.docs.forEach(async (snapshot) => {
       if (!snapshot.exists) await errorThrower("Project Not Exists");
       const data = snapshot.data();
       if (data.outdated) projectRunner(snapshot.id, data);
-      else if (data.pending) scriptRunner(snapshot.id, data);
     });
   });
 };

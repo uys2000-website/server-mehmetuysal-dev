@@ -13,6 +13,13 @@ const db = getFirestore(app, "database");
 export const getDoc = function (col, doc) {
   return db.collection(col).doc(doc).get();
 };
+/**
+ * @param {string} col
+ * @returns
+ */
+export const getDocs = function (col) {
+  return db.collection(col).get();
+};
 
 /**
  * @param {string} col

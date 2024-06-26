@@ -8,6 +8,7 @@ import {
   settingsController,
   projectListener,
   scriptListener,
+  startupLoader,
 } from "./functions/core.mjs";
 
 console.clear();
@@ -16,7 +17,9 @@ setULogger(true, false, info, warn, error);
 
 (async function () {
   const settings = await settingsLoader();
+
   settingsController(settings, true);
+  await startupLoader();
 
   settingsListener();
   projectListener();
