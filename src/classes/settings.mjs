@@ -15,13 +15,23 @@ export class ProjectSettings {
    * @param {string} repo
    * @param {string} folder
    * @param {string} command
+   * @param {string} comenvmand
    * @param {boolean} outdated
    */
-  constructor(name, repo, folder, command, outdated, timestamp = Date.now()) {
+  constructor(
+    name,
+    repo,
+    folder,
+    command,
+    env,
+    outdated,
+    timestamp = Date.now()
+  ) {
     this.name = name;
     this.repo = repo;
     this.folder = folder;
     this.command = command;
+    this.env = env;
     this.outdated = outdated;
     this.timestamp = timestamp;
   }
