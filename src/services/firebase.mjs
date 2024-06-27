@@ -3,7 +3,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import key from "../keys/key.mjs";
 
 const app = initializeApp({ credential: cert(key) });
-const db = getFirestore(app, "database");
+const db = getFirestore(app);
 
 /**
  * @param {string} col
