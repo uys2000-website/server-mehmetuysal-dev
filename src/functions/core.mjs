@@ -73,7 +73,7 @@ export const startupLoader = function () {
       const snapshot = snapshots.docs[i];
       if (!snapshot.exists) await errorThrower("Project Not Exists");
       const data = snapshot.data();
-      await scriptRunner(snapshot.id, data, false).catch();
+      await scriptRunner(snapshot.id, data, false);
     }
   });
 };
@@ -86,7 +86,7 @@ export const projectListener = function () {
     snapshots.docs.forEach(async (snapshot) => {
       if (!snapshot.exists) await errorThrower("Project Not Exists");
       const data = snapshot.data();
-      if (data.outdated) projectRunner(snapshot.id, data).catch();
+      if (data.outdated) projectRunner(snapshot.id, data);
     });
   });
 };
@@ -99,7 +99,7 @@ export const scriptListener = function () {
     snapshots.docs.forEach(async (snapshot) => {
       if (!snapshot.exists) await errorThrower("Script Not Exists");
       const data = snapshot.data();
-      if (data.pending) scriptRunner(snapshot.id, data).catch();
+      if (data.pending) scriptRunner(snapshot.id, data);
     });
   });
 };

@@ -1,6 +1,7 @@
 import { PROJECTSETTINGS } from "../keys/constants.mjs";
 import { runCommand } from "../services/command.mjs";
 import { updateDoc } from "../services/firebase.mjs";
+import { error } from "../services/logger.mjs";
 
 /**
  * @typedef {import('../classes/settings.mjs').ProjectSettings} ProjectSettings
@@ -14,10 +15,14 @@ const testFolder = "";
  */
 export const projectRunner = async function (id, settings) {
   await updateProjectStatus.pLogger(id);
-  await cleanProject.pLogger(settings.folder);
-  await updateProject.pLogger(settings.folder, settings.repo);
-  await loadEnvironment.pLogger(settings.folder, settings.env);
-  await runProject.pLogger(settings.folder, settings.command);
+  try {
+    await cleanProject.pLogger(settings.folder);
+    await updateProject.pLogger(settings.folder, settings.repo);
+    await loadEnvironment.pLogger(settings.folder, settings.env);
+    await runProject.pLogger(settings.folder, settings.command);
+  } catch (err) {
+    error("Promise", "Err", "scriptRunner", err);
+  }
 };
 
 /**

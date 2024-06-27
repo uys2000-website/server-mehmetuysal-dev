@@ -1,6 +1,7 @@
 import { SCRIPTS } from "../keys/constants.mjs";
 import { runCommand } from "../services/command.mjs";
 import { updateDoc } from "../services/firebase.mjs";
+import { error } from "../services/logger.mjs";
 
 /**
  * @typedef {import('../classes/scripts.mjs').Script} Script
@@ -12,7 +13,11 @@ import { updateDoc } from "../services/firebase.mjs";
  */
 export const scriptRunner = async function (id, script, update = true) {
   if (update) await updateScriptStatus.pLogger(id);
-  await runScript.pLogger(script.name, script.script);
+  try {
+    await runScript.pLogger(script.name, script.script);
+  } catch (err) {
+    error("Promise", "Err", "scriptRunner", err);
+  }
 };
 
 /**
